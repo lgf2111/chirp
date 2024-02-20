@@ -49,7 +49,7 @@ const PostView = (props: PostWithUser) => {
           <span>{`@${author.username}`}</span>
           <span className="font-thin">{` · ${dayjs(post.createdAt).fromNow()}`}</span>
         </div>
-        <span>{post.content}</span>
+        <span className="text-2xl">{post.content}</span>
       </div>
     </div>
   );
@@ -89,7 +89,7 @@ export default function Home() {
       </Head>
       <main className="flex h-screen justify-center">
         <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
-          <div className="border-b border-slate-400 p-4">
+          <div className="flex border-b border-slate-400 p-4">
             {!isSignedIn && (
               <div className="flex justify-center">
                 <SignInButton />
