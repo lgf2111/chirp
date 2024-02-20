@@ -10,10 +10,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-
-const filterUserForClient = (user: User) => {
-  return { id: user.id, username: user.username, imageUrl: user.imageUrl };
-};
+import { filterUserForClient } from "~/server/helpers/filterUserForClient";
 
 // Create a new ratelimiter, that allows 3 requests every 1 minute
 const ratelimit = new Ratelimit({
