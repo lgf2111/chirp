@@ -7,12 +7,24 @@ import { type RouterOutputs, api } from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/loading";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
 const CreatePostWizard = () => {
   const { user } = useUser();
-  console.log(user);
+
+  const [input, setInput] = useState("");
+
+  const ctx = api.useUtils();
+
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
+
   if (!user) return null;
   return (
     <div className="flex w-full gap-3">
@@ -27,7 +39,11 @@ const CreatePostWizard = () => {
         placeholder="Type some emojis!"
         type="text"
         className="grow bg-transparent outline-none"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        disabled={isPosting}
       />
+      <button onClick={() => mutate({ content: input })}>Post</button>
     </div>
   );
 };
@@ -64,7 +80,7 @@ const Feed = () => {
 
   return (
     <div className="flex flex-col">
-      {[...data, ...data]?.map((fullPost) => (
+      {data.map((fullPost) => (
         <PostView key={fullPost.post.id} {...fullPost} />
       ))}
     </div>
@@ -96,10 +112,11 @@ export default function Home() {
               </div>
             )}
             {!!isSignedIn && (
-              <div>
-                <CreatePostWizard />
-                <SignOutButton />
-              </div>
+              // <div>
+              //   <CreatePostWizard />
+              //   <SignOutButton />
+              // </div>
+              <CreatePostWizard />
             )}
           </div>
           <Feed />
